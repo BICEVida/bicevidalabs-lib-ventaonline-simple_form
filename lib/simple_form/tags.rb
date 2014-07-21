@@ -19,7 +19,23 @@ module SimpleForm
             label_options = {}
             add_default_name_and_id_for_value(value, label_options)
             label_options['for'] = label_options.delete('id')
-            label_options['class'] = @options[:item_label_class]
+
+            # mespina: Next customizations allow to define markup for button group toggle, see: http://getbootstrap.com/javascript/#buttons-examples
+
+            # mespina: Add item_label_class support for wrapper definition
+            # example:
+            #     config.wrappers :wapper_name do |b|
+            #       b.use :input, item_label_class: 'btn btn-primary'
+            #     end
+            label_options['class'] = @options[:item_label_class] || @html_options[:item_label_class]
+
+            # mespina: Add item_label_active_class support for wrapper definition
+            # example:
+            #     config.wrappers :wapper_name do |b|
+            #       b.use :input, item_label_active_class: 'active'
+            #     end
+            label_options['class'] += " #{@html_options[:item_label_active_class]}" if @object.send(@method_name) == value and @html_options[:item_label_active_class]
+
             rendered_item = content_tag(:label, rendered_item, label_options)
           end
 
