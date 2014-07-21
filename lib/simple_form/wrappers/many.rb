@@ -58,6 +58,10 @@ module SimpleForm
         klass = html_classes(input, options)
         opts  = html_options(options)
         opts[:class] = (klass << opts[:class]).join(' ').strip unless klass.empty?
+
+        # mespina: Add data attributes support
+        opts[:data] = defaults[:data] if defaults
+
         input.template.content_tag(tag, content, opts)
       end
 
