@@ -34,7 +34,14 @@ module SimpleForm
             #     config.wrappers :wapper_name do |b|
             #       b.use :input, item_label_active_class: 'active'
             #     end
-            label_options['class'] += " #{@html_options[:item_label_active_class]}" if @object.send(@method_name) == value and @html_options[:item_label_active_class]
+            current_value = @object.send(@method_name)
+            accept = if current_value.respond_to?(:call)
+              current_value.call(item)
+            else
+              Array(current_value).map(&:to_s).include?(value.to_s)
+            end
+            label_options['class'] += " #{@html_options[:item_label_active_class]}" if accept and @html_options[:item_label_active_class]
+
 
             rendered_item = content_tag(:label, rendered_item, label_options)
           end
